@@ -213,20 +213,22 @@
 
 	<script type="text/javascript">
 	$('#submit').on("click", function() {
-		var userInput = {
+		var newData = {
 			name: $('#name').val().trim(),
 			photo: $('#photo').val().trim(),
 			scores: [$('#question01').val().trim(), $('#question02').val().trim(), $('#question03').val().trim(), $('#question04').val().trim(), $('#question05').val().trim(), $('#question06').val().trim(), $('#question07').val().trim(), $('#question08').val().trim(), $('#question09').val().trim(), $('#question10').val().trim()]
 		}
 		var currentURL = window.location.origin;
-		$.post(currentURL + '/api/friends', userInput, function(data) {
-			$("#bestFriendName").text(data.name);
-			$("#bestFriendImg").attr("src", data.photo);
-			$("#bestFriendModal").modal("show");
+		$.post(currentURL + '/api/friends', newData, function(data) {
+			$("#matchName").text(data.name);
+			$("#matchImg").attr("src", data.photo);
+			$("#resultsModal").modal("show");
 		});
 		return false;
-		console.log(userInput);
+		//console.log(userInput);
 	});
+
+	
 
 </script>
 

@@ -2,6 +2,8 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var path = require("path");
+//in here for now to see what's going on...
+var data = require('./app/data/friends.js');
 
 // express setup
 var app = express();
@@ -30,6 +32,52 @@ var friends = [{
       1
     ]
 }];
+//putting paths back for now...
+app.get("/", function(req, res) {
+          res.sendFile(path.join(__dirname, "../friendfinder/app/public/home.html"));
+        });
+
+        app.get("/survey", function(req, res) {
+          res.sendFile(path.join(__dirname, "../friendfinder/app/public/survey.html"));
+        });
+
+app.get('/api/friends', function(req, res){
+		res.json(data);
+	})
+
+
+	app.post('/api/friends', function(req, res){
+		var newFriend = req.body;
+
+		var comparison = [];
+
+		for(var i = 0; i < data.length; i++) {
+
+			var possibleMatch = data[i];
+			var difference = 0;
+			
+			for(var j = 0; j < possibleMatch.scores.length; j++) {
+				var scoreCombined = Math.abs(possibleMatch.scores[j] - newFriend.scores[j]);
+				difference += scoreCombined;
+			}
+
+			comparison[i] = difference;
+		}
+
+		var bestMatchScore = comparison[0];
+		var bestMatchIndex = 0;
+
+		for(var i = 1; i < comparison.length; i++) {
+			if(comparison[i] < bestMatchScore) {
+				bestMatchScore = comparison[i];
+				bestMatchIndex = i;
+			}
+		}
+
+		data.push(newFriend);
+
+		res.json(data[bestMatchIndex]);
+	})
 
 //routes, later these go into their own files
   //html routes...
@@ -57,8 +105,8 @@ var friends = [{
                 res.json(newFriend);
               });*/
 //routes
-var api = require("./app/routing/apiRoutes.js"); 
-var html = require("./app/routing/htmlRoutes.js");
+//var api = require("./app/routing/apiRoutes.js"); 
+//var html = require("./app/routing/htmlRoutes.js");
 var friends = require("./app/data/friends.js");
 
 //listening
